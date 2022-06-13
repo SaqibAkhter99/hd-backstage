@@ -148,7 +148,7 @@ well with each other. Other domains could be “Content Ingestion”, “Ads” 
 
 Backstage runs a discovery on gitlab and scans each repo to look for
 `catalog-info.yaml` at the root of the repo on the default branch. For example,
-if the repo is `https://gitlab.com/hospitality-digital/breu/devex` and the
+if the repo is `https://gitlab.com/hospitality-digital/breu/devex/code` and the
 default branch is configured to be `master` on gitlab, the `backstage` will
 look for `catalog-info.yaml` at the master branch.
 
@@ -219,7 +219,6 @@ kind: Group
 metadata:
   name: mejix # required. Must follow [RFC1123](https://datatracker.ietf.org/doc/html/rfc1123)
   title: Mejix # optional.
-  description: Breu | Technology for humans # optional.
 spec:
   type: team # required. can be anything, like team, business-unit, ops etc.
   profile: # optional. Generally good for display purposes.
@@ -508,4 +507,23 @@ spec:
   system: hdpay
   definition:
     $text: https://pay.acc.app.hd.digital/api/openapi
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hdpay-api
+  title: REST API for HD Pay
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: service
+  owner: mejix
+  lifecycle: live
+  dependsOn: []
+  system: hdpay
+  providesApis:
+    - hdpay-rest-api-prod
+    - hdpay-rest-api-dev
+    - hdpay-rest-api-stg
+    - hdpay-rest-api-acc
 ```
