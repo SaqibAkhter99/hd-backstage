@@ -56,7 +56,7 @@ We model software using these three core entities.
 
 - **Components** are individual pieces of software
 - **APIs** are the boundaries between different components
-- **_Resources_** are physical or virtual infrastructure needed to operate a component.
+- **Resources** are physical or virtual infrastructure needed to operate a component.
 
 ![Software Model](https://raw.githubusercontent.com/backstage/backstage/master/docs/assets/software-catalog/software-model-core-entities.drawio.svg)
 
