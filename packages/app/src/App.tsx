@@ -55,7 +55,7 @@ const oneloginProver: SignInProviderConfig = {
  * Update components to be included in the app.
  */
 const components: Partial<AppComponents> = {
-  SignInPage: props => <SignInPage {...props} auto provider={oneloginProver} />,
+  // SignInPage: props => <SignInPage {...props} auto provider={oneloginProver} />,
 };
 
 /**
