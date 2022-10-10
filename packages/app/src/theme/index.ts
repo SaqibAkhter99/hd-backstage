@@ -1,1 +1,1 @@
-export {};
+export { spanrTheme } from './spanr';

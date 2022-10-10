@@ -7,10 +7,9 @@ import {
 import {
   AlertDisplay,
   OAuthRequestDialog,
-  SignInPage,
   SignInProviderConfig,
 } from '@backstage/core-components';
-import { oneloginAuthApiRef } from '@backstage/core-plugin-api';
+import { AppTheme, oneloginAuthApiRef } from '@backstage/core-plugin-api';
 import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
@@ -24,7 +23,7 @@ import {
   catalogImportPlugin,
 } from '@backstage/plugin-catalog-import';
 import { orgPlugin } from '@backstage/plugin-org';
-import { PermissionedRoute } from '@backstage/plugin-permission-react';
+import { RequirePermission } from '@backstage/plugin-permission-react';
 import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { SearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
@@ -40,6 +39,9 @@ import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
 import { Root } from './components/Root';
 import { searchPage } from './components/search/SearchPage';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { spanrTheme } from './theme';
+import { darkTheme, lightTheme } from '@backstage/theme';
 
 /**
  * Configures Onelogin authentication.
@@ -76,6 +78,41 @@ const bindRoutes: (context: { bind: AppRouteBinder }) => void = ({ bind }) => {
     catalogIndex: catalogPlugin.routes.catalogIndex,
   });
 };
+/**
+ * Configure the app theme.
+ */
+const themes: (Partial<AppTheme> & Omit<AppTheme, 'theme'>)[] = [
+  {
+    id: 'light',
+    title: 'Light',
+    variant: 'light',
+    Provider: ({ children }) => (
+      <ThemeProvider theme={lightTheme}>
+        <CssBaseline>{children}</CssBaseline>
+      </ThemeProvider>
+    ),
+  },
+  {
+    id: 'dark',
+    title: 'Dark',
+    variant: 'dark',
+    Provider: ({ children }) => (
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline>{children}</CssBaseline>
+      </ThemeProvider>
+    ),
+  },
+  {
+    id: 'spanr',
+    title: 'Spanr',
+    variant: 'light',
+    Provider: ({ children }) => (
+      <ThemeProvider theme={spanrTheme}>
+        <CssBaseline>{children}</CssBaseline>
+      </ThemeProvider>
+    ),
+  },
+];
 
 /**
  * Create the app configuration signleton
@@ -84,6 +121,7 @@ const app = createApp({
   apis,
   components,
   bindRoutes,
+  themes,
 });
 
 const AppProvider = app.getProvider();
@@ -94,7 +132,7 @@ const AppRouter = app.getRouter();
  */
 const routes = (
   <FlatRoutes>
-    <Navigate key="/" to="catalog" />
+    <Route path="/" element={<Navigate to="/catalog" />} />
     <Route path="/catalog" element={<CatalogIndexPage />} />
     <Route
       path="/catalog/:namespace/:kind/:name"
@@ -113,11 +151,14 @@ const routes = (
       path="/tech-radar"
       element={<TechRadarPage width={1500} height={800} />}
     />
-    <PermissionedRoute
+    <Route
       path="/catalog-import"
-      permission={catalogEntityCreatePermission}
-      element={<CatalogImportPage />}
-    />
+      element={
+        <RequirePermission permission={catalogEntityCreatePermission}>
+          <CatalogImportPage />
+        </RequirePermission>
+      }
+    ></Route>
     <Route path="/search" element={<SearchPage />}>
       {searchPage}
     </Route>

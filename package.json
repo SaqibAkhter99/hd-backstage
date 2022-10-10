@@ -6,6 +6,7 @@
     "node": "14 || 16"
   },
   "scripts": {
+    "cli": "backstage-cli",
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",
@@ -31,7 +32,7 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.16.0",
+    "@backstage/cli": "^0.19.0",
     "@spotify/prettier-config": "^12.0.0",
     "concurrently": "^6.0.0",
     "lerna": "^4.0.0",
